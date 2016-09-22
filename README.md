@@ -92,4 +92,4 @@ Subscribe to event to get message and topology updates.
 - **kubernetes.token** security token, default get from folderPath/token
 - **kubernetes.namespace** namespace, default get from folderPath/namespace
 - **kubernetes.ca** ssl sertificate, default get from folderPath/ca.crt
-- **kubernetes.refreshInterval** how often topology changes are checked, default 5000 ms
+- **kubernetes.refreshInterval** how often topology changes are checked, default 10000 ms

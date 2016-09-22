@@ -3,6 +3,7 @@
 const Swarm = require('../lib');
 
 // Register events
+
 Swarm.on('ready', (nodes) =>
   console.log('Current nodes ', Swarm.nodes));
 Swarm.on('error', (error) =>
@@ -15,6 +16,7 @@ Swarm.on('nodeRemoved', (node) =>
   console.log(`Node ${node.ip} has been removed.`));
 
 // Start the connection
+
 Swarm.init({
   kubernetes: {
     // here can specify kubernetes connection options, if not defined from environment variables
@@ -26,7 +28,7 @@ Swarm.init({
     // token: security token, default get from folderPath/token
     // namespace: namespace, default get from folderPath/namespace
     // ca: ssl sertificate, default get from folderPath/ca.crt
-    // refreshInterval: how often topology changes are checked, default 5000 ms
+    // refreshInterval: how often topology changes are checked, default 10000 ms
   },
   // here another way to add events handlers
   onMessage: (message) => console.log(message)
