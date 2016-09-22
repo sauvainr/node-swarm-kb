@@ -16,7 +16,18 @@ Swarm.on('nodeRemoved', (node) =>
 
 // Start the connection
 Swarm.init({
-  appName: 'myapp',
+  kubernetes: {
+    // here can specify kubernetes connection options, if not defined from environment variables
+    // appName: the service name, default got from env: OPENSHIFT_BUILD_NAME or HOSTNAME without -XXX postfix
+    // folderPath: the folder to find kubernetes credentials, default env: KUBERNETES_FOLDER_PATH or '/var/run/secrets/kubernetes.io/serviceaccount',
+    // host: kubernetes service host, default env: KUBERNETES_SERVICE_HOST or 'kubernetes.default.svc.cluster.local',
+    // port: kubernetes service port, default env: KUBERNETES_SERVICE_PORT or 443,
+    // selector: selector to find this service in Kubernetes, default env: KUBERNETES_SELECTOR or build from app={appName}
+    // token: security token, default get from folderPath/token
+    // namespace: namespace, default get from folderPath/namespace
+    // ca: ssl sertificate, default get from folderPath/ca.crt
+    // refreshInterval: how often topology changes are checked, default 5000 ms
+  },
   // here another way to add events handlers
   onMessage: (message) => console.log(message)
 })

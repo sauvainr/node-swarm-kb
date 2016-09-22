@@ -84,8 +84,12 @@ Subscribe to event to get message and topology updates.
 ### options
 
 - **port** communication ports, default _45892_
-- **appName** Kubernetes app name, default env variable OPENSHIFT_BUILD_NAME is used
-- **selector** Kubernetes selector, default _app=${appName}_
-- **serviceAccountPath** Location of Kubernetes files, default _/var/run/secrets/kubernetes.io/serviceaccount_
-- **kubernetesMaster** Kubernetes server domain, default _kubernetes.default.svc.cluster.local_
-- **refreshInterval** Nodes update internal, default _10000_ ms
+- **kubernetes.appName** the service name, default got from env: OPENSHIFT_BUILD_NAME or HOSTNAME without -XXX postfix
+- **kubernetes.folderPath** the folder to find kubernetes credentials, default env: KUBERNETES_FOLDER_PATH or '/var/run/secrets/kubernetes.io/serviceaccount',
+- **kubernetes.host** kubernetes service host, default env: KUBERNETES_SERVICE_HOST or 'kubernetes.default.svc.cluster.local',
+- **kubernetes.port** kubernetes service port, default env: KUBERNETES_SERVICE_PORT or 443,
+- **kubernetes.selector** selector to find this service in Kubernetes, default env: KUBERNETES_SELECTOR or build from app={appName}
+- **kubernetes.token** security token, default get from folderPath/token
+- **kubernetes.namespace** namespace, default get from folderPath/namespace
+- **kubernetes.ca** ssl sertificate, default get from folderPath/ca.crt
+- **kubernetes.refreshInterval** how often topology changes are checked, default 5000 ms
