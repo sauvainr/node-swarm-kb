@@ -33,16 +33,16 @@ Swarm.init({
   // here another way to add events handlers
   onMessage: (message) => console.log(message)
 })
-.catch((error) =>
-  // Same as 'error' event
-  console.error(error))
 .then((nodes) => {
   // Same as 'ready' event
-  console.log(nodes); // == Swarm.nodes
+  console.log('Ready', Swarm.nodes); // == Swarm.nodes
 
   // Send a message to a specific node
   Swarm.send(Object.keys(Swarm.nodes)[0], 'Hello');
 
   // Send a message to every nodes
   Swarm.broadcast({key: 'object also works'});
-});
+})
+.catch((error) =>
+  // Same as 'error' event
+  console.error('Error', error));

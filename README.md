@@ -6,6 +6,8 @@
 
   It allows to keep track of the servers topology and transmitting messages to other nodes.
 
+  This project will also trigger the 'SIGTERM' event once the local node has been removed from the cluster
+
 ## Installation
 
 Add to your project package.json.
