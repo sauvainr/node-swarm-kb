@@ -8,7 +8,7 @@ Swarm.on('ready', (nodes) =>
   console.log('Current nodes ', Swarm.nodes));
 Swarm.on('error', (error) =>
   console.error(error));
-Swarm.on('message', (node, message) =>
+Swarm.on('message', (message, node) =>
   console.log(`Node ${node.ip} says ${message}.`));
 Swarm.on('nodeAdded', (node) =>
   console.log(`Node ${node.ip} has been added.`));
@@ -31,7 +31,7 @@ Swarm.init({
     // refreshInterval: how often topology changes are checked, default 10000 ms
   },
   // here another way to add events handlers
-  onMessage: (message) => console.log(message)
+  onMessage: (message, node) => console.log(message)
 })
 .then((nodes) => {
   // Same as 'ready' event
