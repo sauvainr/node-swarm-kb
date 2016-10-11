@@ -1,12 +1,17 @@
 # node-swarm-kb
 
-  This library enable communication between each nodes of a **Kubernetes** based service.
+[![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/Flet/semistandard)
+
+  This library enable communication between each nodes of a **Kubernetes** based cluster.
 
   For node.js 4+ and Linux
 
-  It allows to keep track of the servers topology and transmitting messages to other nodes.
+  It allows to:
+  - Keep track of the **cluster topology**
+  - **Notify other nodes** of the cluster including Broadcasting messages
+  - Cluster **Task processing** management based on a consistent hashing ring on the cluster servers
 
-  This project will also trigger the 'SIGTERM' event once the local node has been removed from the cluster
+  This project will also trigger the 'SIGTERM' event once the local node has been removed from the cluster. So the application has a heads up before its instance get terminated.
 
 ## Installation
 
@@ -23,51 +28,28 @@ Then hit ``` npm i ```
 
 ## Usage
 
-Full example: [/test/index.js](/test/index.js)
+**Important:** The cluster needs to open the port **45892** (You can specify your own port in the options).
 
 ```javascript
 const Swarm = require('node-swarm-kb');
+
 Swarm.init({
   appName: 'myapp',
   // event listener here
 });
 ```
 
-### Methods & attributes
+Full example: [/test/index.js](/test/index.js)
 
-**Getting the list of service nodes**
+### Cluster Topology
+
+**nodes** - The list of nodes in the cluster
 
 ```javascript
   swarm.nodes[ip] // object indexed by the node ip addresses
 ```
 
-**Sending a message to a node**
-
-```javascript
-  swarm.send(ip || node, 'Hello');
-  // also can send object
-  swarm.send(ip || node, {});
-```
-
-**Broadcasting**
-
-```javascript
-  swarm.broadcast('Hello everyone');
-```
-
-### events
-
-Subscribe to event to get message and topology updates.
-
-**message** message from other nodes
-
-```javascript
-  swarm.on('message', (node, message) => {
-    console.log(`Node ${node.ip} says ${message}.`);
-  });
-```
-
-**nodeAdded** new node has been added to the topology
+**nodeAdded** - A new node has been added to the cluster
 
 ```javascript
   swarm.on('nodeAdded', (node) => {
@@ -75,7 +57,7 @@ Subscribe to event to get message and topology updates.
   });
 ```
 
-**nodeRemoved** new node has been removed to the topology
+**nodeRemoved** - A node has been removed from the cluster
 
 ```javascript
   swarm.on('nodeRemoved', (node) => {
@@ -83,15 +65,84 @@ Subscribe to event to get message and topology updates.
   });
 ```
 
-### options
+**amIMaster** - Is the current node the Cluster master
 
-- **port** communication ports, default _45892_
+The master node do not have any specific role or behavior.
+It is just an arbitrary selected single node of cluster known by all.
+This is useful for a behavior that has to be done only in one pod of cluster.
+The Master is automatically elected after a topology change.
+
+```javascript
+  swarm.amIMaster();
+```
+
+**isMe** - Test if the given node or ip is the current node.
+
+```javascript
+  swarm.isMe(node || ip);
+```
+
+### Messaging
+
+**Sending a message to a node**
+
+```javascript
+  var promise = swarm.send(ip || node, 'topic', {/* data to send */});
+```
+
+**Broadcasting**
+
+```javascript
+  var promise = swarm.broadcast('topic', 'Hello everyone');
+```
+
+**Listening for messages**
+
+```javascript
+  var promise = swarm.messages.on('topic', (message, topics, from) => {
+    /* handle message */
+    return 'response'; // A Promise can be returned to
+  });
+```
+
+### Cluster Tasks
+
+This module also includes a way to execute tasks centrally in a cluster.
+The task will use consistent hashing to execute a given task in a consistent node of the cluster.
+
+**Example**
+
+```javascript
+
+Swarm.tasks.register('taskName',
+(arg1, arg2) => { /** should return a Bluebird compatible promise **/ },
+{ /** Options overloading the default */
+  singleTrigger: true
+});
+
+// The first argument is used as hashing key.
+// If no argument is provided, the task name is used.
+var promise = Swarm.tasks.exec('taskName', arg1, arg2);
+
+```
+
+
+## All Options
+
+- **kubernetes** Options for the kubernetes module, used to maintain the list of nodes of the cluster
 - **kubernetes.appName** the service name, default got from env: OPENSHIFT_BUILD_NAME or HOSTNAME without -XXX postfix
-- **kubernetes.folderPath** the folder to find kubernetes credentials, default env: KUBERNETES_FOLDER_PATH or '/var/run/secrets/kubernetes.io/serviceaccount',
-- **kubernetes.host** kubernetes service host, default env: KUBERNETES_SERVICE_HOST or 'kubernetes.default.svc.cluster.local',
-- **kubernetes.port** kubernetes service port, default env: KUBERNETES_SERVICE_PORT or 443,
+- **kubernetes.folderPath** the folder to find kubernetes credentials, default env: KUBERNETES_FOLDER_PATH or _/var/run/secrets/kubernetes.io/serviceaccount_
+- **kubernetes.host** kubernetes service host, default env: KUBERNETES_SERVICE_HOST or _kubernetes.default.svc.cluster.local_,
+- **kubernetes.port** kubernetes service port, default env: KUBERNETES_SERVICE_PORT or _443_,
 - **kubernetes.selector** selector to find this service in Kubernetes, default env: KUBERNETES_SELECTOR or build from app={appName}
-- **kubernetes.token** security token, default get from folderPath/token
-- **kubernetes.namespace** namespace, default get from folderPath/namespace
-- **kubernetes.ca** ssl sertificate, default get from folderPath/ca.crt
-- **kubernetes.refreshInterval** how often topology changes are checked, default 10000 ms
+- **kubernetes.token** security token, default get from _folderPath/token_
+- **kubernetes.namespace** namespace, default get from _folderPath/namespace_
+- **kubernetes.ca** ssl sertificate, default get from _folderPath/ca.crt_
+- **kubernetes.refreshInterval** how often topology changes are checked, default _10000_ ms
+- **messages** Options for the messaging module
+- **messages.port** communication ports, default _45892_
+- **tasks** Options for the task processing module use as default for each tasks
+- **tasks.timeout** time in ms after which to timeout the task execution, default _30000_ ms
+- **tasks.serialized** Indicate the tasks needs to be executed sequentially, default _true_
+- **tasks.singleTrigger** (if serialized == true) Indicate the tasks dont need to accumulate and only one will be executed. default _false_. Values: 'N' Indicate that the trigger needs to be executed anytime AFTER the trigger and cannot be part of on-going task, therefore queuing a single execution.
+- **tasks.maxQueueLength** (if serialized = true && singleTrigger = false) The maximum size of the execution queue before an error is returned, default _20_
