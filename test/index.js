@@ -1,9 +1,10 @@
 'use strict';
 
+const local = true;
 const Swarm = require('../lib');
 const Promise = require('bluebird');
 const assert = require('assert');
-require('./kbShim'); // uses port 12345
+local && require('./kbShim'); // uses port 12345
 
 // Register events
 
@@ -23,13 +24,15 @@ process.on('uncaughtException', (error) =>
 // Start the connection
 Swarm.init({
   /* see README for options */
-  kubernetes: {
+  kubernetes: local
+  ? {
     host: 'localhost',
     port: 12345,
     token: 'notneeded',
     namespace: 'notneeded',
     noSSL: true
   }
+  : {}
 })
 .then((nodes) =>
   assert.ok(nodes, `Init: ${nodes}`))
@@ -44,7 +47,7 @@ Swarm.init({
   return Promise.join(
     Swarm.send(Object.keys(Swarm.nodes)[0], 'topic', 'ping')
     .then(response =>
-      assert.equal(response, undefined, `Messages: Local call ignored: ${response} === undefined`)),
+      assert.equal(response, local ? undefined : 'pong', `Messages: Local call ignored: ${response} === undefined`)),
 
     // Send a message to a specific node: you can send to yourself
     Swarm.messages.send(Object.keys(Swarm.nodes)[0], 'topic', 'ping')
