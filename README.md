@@ -2,33 +2,35 @@
 
 [![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/Flet/semistandard)
 
-  This library enable communication between each nodes of a **Kubernetes** based cluster.
+  This library enable communication between each nodes of a [Kubernetes](http://kubernetes.io) based cluster such as [openshift](http://www.openshift.com).
+  
+(Designed for node.js 4+ and Linux)
 
-  For node.js 4+ and Linux
+## Purpose
 
   It allows to:
-  - Keep track of the **cluster topology**
+  - Keep track real-time of the **cluster topology**
   - **Notify other nodes** of the cluster including Broadcasting messages
   - Cluster **Task processing** management based on a consistent hashing ring on the cluster servers
+
+  Use-case examples:
+  - A processing task needs to be executed only once in the cluster (eg. cronjob like).
+  - A task needs to be executed on the same server for a given customer (stickiness).
+  - Requests queuing & re-ordering to insure request received by different servers of the cluster get processed sequencially.
+  - An event needs to be propagated to every nodes of the cluster (eg. Websocket message or closure).
+  - Maintain a client connection map (eg. websocket)
 
   This project will also trigger the 'SIGTERM' event once the local node has been removed from the cluster. So the application has a heads up before its instance get terminated.
 
 ## Installation
 
-Add to your project package.json.
-
-```JSON
-"dependencies": {
-  ...
-  "node-swarm-kb": "git://github.com/sauvainr/node-swarm-kb.git#master"
-}
+```javascript
+npm i --save node-swarm-kb
 ```
-
-Then hit ``` npm i ```
 
 ## Usage
 
-**Important:** The cluster needs to open the port **45892** (You can specify your own port in the options).
+**Important:** The cluster needs to open the port **45892** for internal communication (You can specify your own port in the options). This port should not be accessible from the outside world!
 
 ```javascript
 const Swarm = require('node-swarm-kb');
