@@ -2,18 +2,21 @@
 
 /* This file is used for cluster testing when tests are executed from another pods */
 
+const appPackage = require('../package.json');
+process.env.DEBUG = `${appPackage.name}*`;
+const debug = require('debug')(`${appPackage.name} [Slave]`);
 const Swarm = require('../lib');
 const Promise = require('bluebird');
 
 // Register events
 Swarm.on('ready', (nodes) =>
-  console.log('Current nodes ', Swarm.nodes));
+  debug(`Current nodes ${nodes}`));
 Swarm.on('error', (error) =>
   console.error('Error', error.stack));
 Swarm.on('nodeAdded', (node) =>
-  console.log(`Node ${node.ip} has been added.`));
+  debug(`Node ${node.ip} has been added.`));
 Swarm.on('nodeRemoved', (node) =>
-  console.log(`Node ${node.ip} has been removed.`));
+  debug(`Node ${node.ip} has been removed.`));
 
 process.on('uncaughtException', (error) =>
   console.error('Test failed:', error.stack) ||
@@ -60,7 +63,7 @@ Swarm.init()
 .then((nodes) => {
   Swarm.messages.on('topic', (message, topics, from) => {
     /* handle message */
-    console.log(`Message from ${from}`, message);
+    debug(`Message from ${from}`, message);
     return 'pong';
   });
 

@@ -1,5 +1,9 @@
 'use strict';
 
+// display logs
+const appPackage = require('../package.json');
+process.env.DEBUG = `${appPackage.name}*`;
+const debug = require('debug')(`${appPackage.name} [Test]`);
 const local = true;
 const Swarm = require('../lib');
 const Promise = require('bluebird');
@@ -9,13 +13,13 @@ local && require('./kbShim'); // uses port 12345
 // Register events
 
 Swarm.on('ready', (nodes) =>
-  console.log('Current nodes ', Swarm.nodes));
+  debug('Current nodes ', Swarm.nodes));
 Swarm.on('error', (error) =>
   console.error('Error', error.stack));
 Swarm.on('nodeAdded', (node) =>
-  console.log(`Node ${node.ip} has been added.`));
+  debug(`Node ${node.ip} has been added.`));
 Swarm.on('nodeRemoved', (node) =>
-  console.log(`Node ${node.ip} has been removed.`));
+  debug(`Node ${node.ip} has been removed.`));
 
 process.on('uncaughtException', (error) =>
   console.error('Test failed:', error.stack) ||
@@ -40,11 +44,12 @@ Swarm.init({
 .then(_ => { // Messages
   Swarm.messages.on('topic', (message, topics, from) => {
     /* handle message */
-    console.log(`Message from ${from}`, message);
+    debug(`Message from ${from}`, message);
     return 'pong';
   });
 
   // This will return 'undefined' if the cluster only has one node
+  debug(`Sending ping message`);
   return Promise.join(
     Swarm.send(Object.keys(Swarm.nodes)[0], 'topic', 'ping')
     .then(response =>
@@ -149,7 +154,7 @@ Swarm.init({
   .catch(error =>
     assert.equal(error.message, 'operation timed out', `Tasks: TimeoutTask: ${error.message}`));
 }).then(_ =>
-  console.log('Success') || process.exit())
+  debug('Success') || process.exit())
 .catch((error) =>
   // Same as 'error' event
   console.error('Error', error.stack) || process.exit(1));

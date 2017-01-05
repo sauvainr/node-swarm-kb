@@ -9,17 +9,19 @@
 
 const localIps = require('../lib/localIps');
 const Http = require('http');
+const appPackage = require('../package.json');
+const debug = require('debug')(`${appPackage.name} [KbShim]`);
 
 function messageHandler (request, response) {
   response.writeHead(200, {'Content-Type': 'application/json'});
   if (request.url.match(/watch/)) {
-    console.log(`[node-swarm-kb] kbShim: watching..`);
+    debug(`Watching.. ${request.url}`);
     return setTimeout(_ => {
-      console.log(`[node-swarm-kb] kbShim: Closing watch!`);
+      debug(`Closing ${request.url} watch!`);
       response.end('{}');
     }, 30000);
   }
-  console.log(`[node-swarm-kb] kbShim: Replying to request..`);
+  debug(`Replying to request ${request.url}..`);
   response.end(JSON.stringify({
     items: [{
       subsets: [{
@@ -36,5 +38,5 @@ server.on('listening', _ => {
   const bind = typeof addr === 'string'
     ? `pipe ${addr}`
     : `port ${addr.port}`;
-  console.log(`[node-swarm-kb] kbShim: Listening on ${bind}`);
+  debug(`Listening on ${bind}..`);
 });
