@@ -30,7 +30,7 @@ const tasks = {
     (arg1, arg2) => new Promise((resolve, reject) =>
       arg2
       ? resolve(arg1 + arg2)
-      : reject('error')),
+      : reject(new Error('error'))),
 
   'stackingTask': {
     handler: (arg1) => new Promise((resolve, reject) => setTimeout(_ => resolve(Date.now()), 100)),
