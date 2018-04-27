@@ -3,8 +3,8 @@
 [![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/Flet/semistandard)
 
   This library enable communication between each nodes of a [Kubernetes](http://kubernetes.io) based cluster such as [openshift](http://www.openshift.com).
-  
-(Designed for node.js 4+ and Linux)
+
+(Designed for node.js 8+ and Linux)
 
 ## Purpose
 
@@ -89,19 +89,19 @@ The Master is automatically elected after a topology change.
 **Sending a message to a node**
 
 ```javascript
-  var promise = swarm.send(ip || node, 'topic', {/* data to send */});
+  const promise = swarm.send(ip || node, 'topic', {/* data to send */});
 ```
 
 **Broadcasting**
 
 ```javascript
-  var promise = swarm.broadcast('topic', 'Hello everyone');
+  const promise = swarm.broadcast('topic', 'Hello everyone');
 ```
 
 **Listening for messages**
 
 ```javascript
-  var promise = swarm.messages.on('topic', (message, topics, from) => {
+  const promise = swarm.messages.on('topic', (message, topics, from) => {
     /* handle message */
     return 'response'; // A Promise can be returned to
   });
@@ -124,7 +124,7 @@ Swarm.tasks.register('taskName',
 
 // The first argument is used as hashing key.
 // If no argument is provided, the task name is used.
-var promise = Swarm.tasks.exec('taskName', arg1, arg2);
+const promise = Swarm.tasks.exec('taskName', arg1, arg2);
 
 ```
 
@@ -142,7 +142,7 @@ var promise = Swarm.tasks.exec('taskName', arg1, arg2);
 - **kubernetes.ca** ssl sertificate, default get from _folderPath/ca.crt_
 - **kubernetes.refreshInterval** how often topology changes are checked, default _10000_ ms
 - **messages** Options for the messaging module
-- **messages.port** communication ports, default _45892_
+- **messages.port** If no http server provide: communication ports, default env: SWARM_MESSAGING_PORT or _45892_
 - **tasks** Options for the task processing module use as default for each tasks
 - **tasks.timeout** time in ms after which to timeout the task execution, default _30000_ ms
 - **tasks.serialized** Indicate the tasks needs to be executed sequentially, default _true_

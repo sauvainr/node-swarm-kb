@@ -1,6 +1,6 @@
 {
   "name": "node-swarm-kb",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "Kubernetes based inter-cluster communication",
   "keywords": [
     "Kubernetes",
@@ -13,11 +13,11 @@
   "license": "MIT",
   "main": "lib",
   "dependencies": {
-    "bluebird": "^3.3.x",
-    "debug": "^2.6.0",
-    "hashring": "^3.2.0",
-    "k8s": "^0.4.9",
-    "request-promise": "^3.0.x"
+    "bluebird": "^3.5.x",
+    "debug": "^3.1.x",
+    "hashring": "^3.2.x",
+    "k8s": "^0.4.x",
+    "request-promise": "^4.2.x"
   },
   "devDependencies": {
     "semistandard": "*"
@@ -30,6 +30,6 @@
     "url": "https://github.com/sauvainr/node-swarm-kb.git"
   },
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=9.0.0"
   }
 }
