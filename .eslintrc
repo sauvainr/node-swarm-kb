@@ -1,0 +1,13 @@
+{
+  "extends": "standard",
+  "env": {
+    "node": true,
+    "mocha": true
+  },
+  "rules": {
+    "semi": [2, "always"],
+    "no-mixed-operators": 0,
+    "camelcase": 0,
+    "indent": 0
+  }
+}
