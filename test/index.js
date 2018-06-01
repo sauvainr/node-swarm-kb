@@ -81,7 +81,7 @@ Swarm.init({
     (arg1, arg2) => new Promise((resolve, reject) =>
       arg2
       ? resolve(arg1 + arg2)
-      : reject('error')));
+      : reject(new Error('error'))));
 
   return Promise.join(
     Swarm.tasks.exec('taskWithPromise', 1, 2)
@@ -90,7 +90,7 @@ Swarm.init({
 
     Swarm.tasks.exec('taskWithPromise', 1)
     .catch(error =>
-      assert.equal(error, 'error', `Tasks: promise task Error: ${error}`))
+      assert.equal(error, 'Error: error', `Tasks: promise task Error: Error: ${error}`))
   );
 }).then(_ => { // Tasks: stacking max 2
   Swarm.tasks.register('stackingTask',
