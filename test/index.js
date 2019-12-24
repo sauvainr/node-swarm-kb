@@ -47,22 +47,22 @@ Swarm.init({
   });
 
   // This will return 'undefined' if the cluster only has one node
-  debug(`Sending ping message`);
+  debug('Sending ping message');
   return Promise.join(
     Swarm.send(Object.keys(Swarm.nodes)[0], 'topic', 'ping')
     .then(response =>
-      assert.equal(response, local ? undefined : 'pong', `Messages: Local call ignored: ${response} === undefined`)),
+      assert.strictEqual(response, local ? undefined : 'pong', `Messages: Local call ignored: ${response} === undefined`)),
 
     // Send a message to a specific node: you can send to yourself
     Swarm.messages.send(Object.keys(Swarm.nodes)[0], 'topic', 'ping')
     .then(response =>
-      assert.equal(response, 'pong', `Messages: Forced local call: ${response} === pong`)),
+      assert.strictEqual(response, 'pong', `Messages: Forced local call: ${response} === pong`)),
 
     // Send a message to every nodes
     // This will return 'undefined' if the cluster only has one node
-    Swarm.broadcast('ping', {key: 'object also works'})
+    Swarm.broadcast('ping', { key: 'object also works' })
     .then(response =>
-      assert.equal(response.length, Object.keys(Swarm.nodes).length, `Messages: Broadcast call ignored: ${response.length} === ${Object.keys(Swarm.nodes).length}`))
+      assert.strictEqual(response.length, Object.keys(Swarm.nodes).length, `Messages: Broadcast call ignored: ${response.length} === ${Object.keys(Swarm.nodes).length}`))
   );
 }).then(_ => { // Tasks: Simple Task
   Swarm.tasks.register('taskName',
@@ -72,7 +72,7 @@ Swarm.init({
   // If no argument is provided, the task name is used.
   return Swarm.tasks.exec('taskName', 1, 2)
   .then(response =>
-    assert.equal(response, 3, `Tasks: simple task: ${response} === 3`));
+    assert.strictEqual(response, 3, `Tasks: simple task: ${response} === 3`));
 }).then(_ => { // Tasks: Promise Task
   // Test tasks with promise
   Swarm.tasks.register('taskWithPromise',
@@ -84,11 +84,11 @@ Swarm.init({
   return Promise.join(
     Swarm.tasks.exec('taskWithPromise', 1, 2)
     .then(response =>
-      assert.equal(response, 3, `Tasks: promise task: ${response} === 3`)),
+      assert.strictEqual(response, 3, `Tasks: promise task: ${response} === 3`)),
 
     Swarm.tasks.exec('taskWithPromise', 1)
     .catch(error =>
-      assert.equal(error, 'Error: error', `Tasks: promise task Error: Error: ${error}`))
+      assert.strictEqual(error.message, 'error', `Tasks: promise task 'error' === '${error.message}'`))
   );
 }).then(_ => { // Tasks: stacking max 2
   Swarm.tasks.register('stackingTask',
@@ -102,7 +102,7 @@ Swarm.init({
     Promise.delay(50)
     .then(_ => Swarm.tasks.exec('stackingTask', 'arg1'))
     .catch(error =>
-      assert.equal(error.message, 'Max execution queue size reached for task stackingTask', `Tasks: stackingTask Max Queue reached: ${error.message}`))
+      assert.strictEqual(error.message, 'Max execution queue size reached for task stackingTask', `Tasks: stackingTask Max Queue reached: ${error.message}`))
   ).spread((t1, t2, t3) =>
     assert.ok(t1 !== t2 && t2 !== t3, `Tasks: stackingTask consecutive stacking: ${t1} !== ${t2} !== ${t3}`));
 }).then(_ => { // Tasks: single Execution
@@ -150,7 +150,7 @@ Swarm.init({
 
   return Swarm.tasks.exec('TimeoutTask', 'arg1')
   .catch(error =>
-    assert.equal(error.message, 'operation timed out', `Tasks: TimeoutTask: ${error.message}`));
+    assert.strictEqual(error.message, 'operation timed out', `Tasks: TimeoutTask: ${error.message}`));
 }).then(_ =>
   debug('Success') || process.exit())
 .catch((error) =>

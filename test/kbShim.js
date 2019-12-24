@@ -11,7 +11,7 @@ const appPackage = require('../package.json');
 const debug = require('debug')(`${appPackage.name} [KbShim]`);
 
 function messageHandler (request, response) {
-  response.writeHead(200, {'Content-Type': 'application/json'});
+  response.writeHead(200, { 'Content-Type': 'application/json' });
   if (request.url.match(/watch/)) {
     debug(`Watching.. ${request.url}`);
     return setTimeout(_ => {

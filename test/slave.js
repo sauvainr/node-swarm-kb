@@ -21,36 +21,36 @@ process.on('uncaughtException', (error) =>
   process.exit(1));
 
 const tasks = {
-  'taskName':
+  taskName:
     (arg1, arg2) => arg1 + arg2,
 
-  'taskWithPromise':
+  taskWithPromise:
     (arg1, arg2) => new Promise((resolve, reject) =>
       arg2
       ? resolve(arg1 + arg2)
       : reject(new Error('error'))),
 
-  'stackingTask': {
+  stackingTask: {
     handler: (arg1) => new Promise((resolve, reject) => setTimeout(_ => resolve(Date.now()), 100)),
     maxQueueLength: 2
   },
 
-  'SingleTask': {
+  SingleTask: {
     handler: (arg1) => new Promise((resolve, reject) => setTimeout(_ => resolve(Date.now()), 100)),
     singleTrigger: true
   },
 
-  'NoStackingTask': {
+  NoStackingTask: {
     handler: (arg1) => new Promise((resolve, reject) => setTimeout(_ => resolve(Date.now()), 100)),
     singleTrigger: 'N'
   },
 
-  'ParallelTask': {
+  ParallelTask: {
     handler: (arg1) => new Promise((resolve, reject) => setTimeout(_ => resolve(Date.now()), 100)),
     serialized: false
   },
 
-  'TimeoutTask': {
+  TimeoutTask: {
     handler: (arg1) => new Promise((resolve, reject) => setTimeout(_ => resolve(Date.now()), 100)),
     timeout: 50
   }
