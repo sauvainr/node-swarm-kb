@@ -1,6 +1,6 @@
 {
   "name": "node-swarm-kb",
-  "version": "0.4.13",
+  "version": "0.4.14",
   "description": "Kubernetes based inter-cluster communication",
   "keywords": [
     "Kubernetes",
@@ -13,20 +13,20 @@
   "license": "MIT",
   "main": "lib",
   "dependencies": {
-    "bluebird": "^3.5.4",
-    "debug": "^3.2.6",
+    "bluebird": "^3.7.2",
+    "debug": "^4.1.1",
     "hashring": "^3.2.x",
     "k8s": "^0.4.x",
-    "request-promise": "^4.2.4"
+    "request-promise": "^4.2.5"
   },
   "devDependencies": {
-    "eslint": "^5.16.0",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.17.1",
-    "eslint-plugin-node": "^6.0.0",
-    "eslint-plugin-prettier": "^2.7.0",
-    "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-standard": "^3.0.1"
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1"
   },
   "scripts": {
     "lint": "eslint .",
