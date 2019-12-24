@@ -1,5 +1,3 @@
-'use strict';
-
 /* This file is used for cluster testing when tests are executed from another pods */
 
 const appPackage = require('../package.json');

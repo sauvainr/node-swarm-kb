@@ -16,7 +16,7 @@
   Use-case examples:
   - A processing task needs to be executed only once in the cluster (eg. cronjob like).
   - A task needs to be executed on the same server for a given customer (stickiness).
-  - Requests queuing & re-ordering to insure request received by different servers of the cluster get processed sequencially.
+  - Requests queuing & re-ordering to ensure request received by different servers of the cluster get processed sequencially.
   - An event needs to be propagated to every nodes of the cluster (eg. Websocket message or closure).
   - Maintain a client connection map (eg. websocket)
 

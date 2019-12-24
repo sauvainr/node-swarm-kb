@@ -1,5 +1,3 @@
-'use strict';
-
 // display logs
 const appPackage = require('../package.json');
 process.env.DEBUG = `${appPackage.name}*`;
