@@ -1,7 +1,7 @@
 // display logs
 const appPackage = require('../package.json');
 process.env.DEBUG = `${appPackage.name}*`;
-const debug = require('debug')(`${appPackage.name} [Test]`);
+const debug = require('debug')(`${appPackage.name}:test`);
 const local = true;
 const Swarm = require('../lib');
 const Promise = require('bluebird');
