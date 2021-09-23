@@ -8,7 +8,7 @@
 const localIps = require('../lib/localIps');
 const Http = require('http');
 const appPackage = require('../package.json');
-const debug = require('debug')(`${appPackage.name} [KbShim]`);
+const debug = require('debug')(`${appPackage.name}:kbShim`);
 
 function messageHandler (request, response) {
   response.writeHead(200, { 'Content-Type': 'application/json' });

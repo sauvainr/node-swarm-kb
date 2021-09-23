@@ -2,7 +2,7 @@
 
 const appPackage = require('../package.json');
 process.env.DEBUG = `${appPackage.name}*`;
-const debug = require('debug')(`${appPackage.name} [Slave]`);
+const debug = require('debug')(`${appPackage.name}:slave`);
 const Swarm = require('../lib');
 const Promise = require('bluebird');
 
