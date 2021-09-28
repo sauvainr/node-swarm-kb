@@ -1,6 +1,6 @@
 {
   "name": "node-swarm-kb",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Kubernetes based inter-cluster communication",
   "keywords": [
     "Kubernetes",
