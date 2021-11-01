@@ -33,7 +33,8 @@ Swarm.init({
     port: 12345,
     token: 'notneeded',
     namespace: 'notneeded',
-    noSSL: true
+    noSSL: true,
+    refreshInterval: 1000
   }
   : {}
 })
@@ -47,7 +48,7 @@ Swarm.init({
   });
 
   // This will return 'undefined' if the cluster only has one node
-  debug('Sending ping message');
+  console.log('Sending ping message');
   return Promise.join(
     Swarm.send(Object.keys(Swarm.nodes)[0], 'topic', 'ping')
     .then(response =>
@@ -65,6 +66,7 @@ Swarm.init({
       assert.strictEqual(response.length, Object.keys(Swarm.nodes).length, `Messages: Broadcast call ignored: ${response.length} === ${Object.keys(Swarm.nodes).length}`))
   );
 }).then(_ => { // Tasks: Simple Task
+  console.log('Tasks: Simple task');
   Swarm.tasks.register('taskName',
     (arg1, arg2) => arg1 + arg2);
 
@@ -74,7 +76,7 @@ Swarm.init({
   .then(response =>
     assert.strictEqual(response, 3, `Tasks: simple task: ${response} === 3`));
 }).then(_ => { // Tasks: Promise Task
-  // Test tasks with promise
+  console.log('Tasks: Promise Task');
   Swarm.tasks.register('taskWithPromise',
     (arg1, arg2) => new Promise((resolve, reject) =>
       arg2
@@ -91,6 +93,7 @@ Swarm.init({
       assert.strictEqual(error.message, 'error', `Tasks: promise task 'error' === '${error.message}'`))
   );
 }).then(_ => { // Tasks: stacking max 2
+  console.log('Tasks: stacking max 2');
   Swarm.tasks.register('stackingTask',
     (arg1) => new Promise((resolve, reject) => setTimeout(_ => resolve(Date.now()), 100)),
     { maxQueueLength: 2 });
@@ -106,6 +109,7 @@ Swarm.init({
   ).spread((t1, t2, t3) =>
     assert.ok(t1 !== t2 && t2 !== t3, `Tasks: stackingTask consecutive stacking: ${t1} !== ${t2} !== ${t3}`));
 }).then(_ => { // Tasks: single Execution
+  console.log('Tasks: single Execution');
   Swarm.tasks.register('SingleTask',
     (arg1) => new Promise((resolve, reject) => setTimeout(_ => resolve(Date.now()), 100)),
     { singleTrigger: true });
@@ -117,6 +121,7 @@ Swarm.init({
   ).spread((t1, t2, t3) =>
     assert.ok(t1 === t2 && t2 === t3, `Tasks: SingleTask concurrent stacking: ${t1} === ${t2} === ${t3}`));
 }).then(_ => { // Tasks: NoStackingTask
+  console.log('Tasks: NoStackingTask');
   Swarm.tasks.register('NoStackingTask',
     (arg1) => new Promise((resolve, reject) => setTimeout(_ => resolve(Date.now()), 100)),
     { singleTrigger: 'N' });
@@ -132,6 +137,7 @@ Swarm.init({
     assert.ok(t1 === t2 && t2 === t3, `Tasks: NoStackingTask concurrent stacking: ${t1} === ${t2} === ${t3}`);
   });
 }).then(_ => { // Tasks: ParallelTask
+  console.log('Tasks: ParallelTask');
   Swarm.tasks.register('ParallelTask',
     (arg1) => new Promise((resolve, reject) => setTimeout(_ => resolve(Date.now()), 100)),
     { serialized: false });
@@ -144,6 +150,7 @@ Swarm.init({
     assert.ok(Math.abs(t0 - t1) < 100 && Math.abs(t1 - t2) < 100, `Tasks: ParallelTask: ${t1} <> ${t1} <> ${t2}  < 100ms`);
   });
 }).then(_ => { // Tasks: TimeoutTask
+  console.log('Tasks: TimeoutTask');
   Swarm.tasks.register('TimeoutTask',
     (arg1) => new Promise((resolve, reject) => setTimeout(_ => resolve(Date.now()), 100)),
     { timeout: 50 });
