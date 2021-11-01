@@ -16,7 +16,6 @@
     "bluebird": "^3.7.x",
     "debug": "^4.3.x",
     "hashring": "^3.2.x",
-    "k8s": "^0.4.x",
     "request-promise": "^4.2.6"
   },
   "devDependencies": {

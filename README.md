@@ -6,6 +6,14 @@
 
 (Designed for node.js 8+ and Linux)
 
+## v0.6 Notable change
+
+StrictSSL is now enforced by default, unless set evn 
+
+> KUBERNETES_STRICTSSL=FALSE
+
+Due to multiple issues depending the dependant libraries the watch feature was removed and get back to the 10 sec interval check.
+
 ## Purpose
 
   It allows to:
@@ -140,6 +148,7 @@ const promise = Swarm.tasks.exec('taskName', arg1, arg2);
 - **kubernetes.token** security token, default get from _folderPath/token_
 - **kubernetes.namespace** namespace, default get from _folderPath/namespace_
 - **kubernetes.ca** ssl sertificate, default get from _folderPath/ca.crt_
+- **kubernetes.strictSSL** default: KUBERNETES_STRICTSSL or _true_
 - **kubernetes.refreshInterval** how often topology changes are checked, default _10000_ ms
 - **messages** Options for the messaging module
 - **messages.port** If no http server provide: communication ports, default env: SWARM_MESSAGING_PORT or _45892_
